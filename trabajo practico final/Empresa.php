@@ -129,8 +129,7 @@ mensajeoperacion;
     public function insertar(){
         $base= new BaseDatos();
         $resp= false;
-        $consultaInsertar= "INSERT INTO Empresa(idempresa,enombre, edireccion) 
-        VALUES (". $this->getIdempresa() ." , ". $this->getEnombre(). ",". $this->getEdireccion() . ")";
+        $consultaInsertar= "INSERT INTO empresa(idempresa,enombre, edireccion) VALUES ( default ," . $this->getEnombre(). " , ". $this->getEdireccion() . ")";
         
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consultaInsertar)) {

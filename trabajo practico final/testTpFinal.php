@@ -17,13 +17,30 @@ foreach ($colEmpresas as $unaEmpresa){
 }
 //nueva empresa a sumar
 
-//$empresaasumar=  new Empresa();
+$empresaasumar=  new Empresa();
 
-//$empresaasumar->cargar('0', "columbia", "santa");
+$empresaasumar->cargar("", "columbia", "santa");
 
-//$empresaasumar->insertar();
+$empresaasumar->setEnombre("hawaii");
+$empresaasumar->setEdireccion("santa fe");
 
-$prueba= new BaseDatos;
+$empresaasumar->insertar();
 
-$prueba->Ejecutar("INSERT INTO empresa VALUES ( default , 'DRAGON BALL',  'HYRULE')");
+//      $prueba= new BaseDatos;
+
+//$prueba->Ejecutar("INSERT INTO empresa VALUES ( default , 'DRAGON BALL',  'HYRULE')");
+/*
+rnumeroempleado;
+rnumerolicencia;
+rnombre;
+rapellido;
+*/
+
+
+/* if ($prueba->Iniciar()) {
+    $prueba->Ejecutar("INSERT INTO empresa VALUES (default, 'koko', 'santa fe 240')");
+} else {
+    echo "esto es una mierda";
+}
+ */
 

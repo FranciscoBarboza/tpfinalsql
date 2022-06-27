@@ -119,7 +119,7 @@ class Responsable{
 
     public function Buscar($rnumeroempleado){
         $base= new BaseDatos();
-        $consultaPersona= "SELECT * FROM Responsable WHERE rnumeroempleado" . $rnumeroempleado;
+        $consultaPersona= "SELECT * FROM Responsable WHERE rnumeroempleado=" . $rnumeroempleado;
         $resp= false;
         if ($base->Iniciar()) {
             if ($base->Iniciar()) {
