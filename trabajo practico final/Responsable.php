@@ -1,5 +1,5 @@
 <?php
-include_once "BasedeDatos.php";
+include_once "BaseDatos.php";
 
 /* 
 CREATE DATABASE bdviajes; 

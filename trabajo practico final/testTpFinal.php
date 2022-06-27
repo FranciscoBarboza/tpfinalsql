@@ -17,18 +17,13 @@ foreach ($colEmpresas as $unaEmpresa){
 }
 //nueva empresa a sumar
 
-/* $empresaasumar=  new Empresa();
+//$empresaasumar=  new Empresa();
 
-$empresaasumar->setEnombre("hola");
-$empresaasumar->setEdireccion("brazil");
+//$empresaasumar->cargar('0', "columbia", "santa");
 
-$empresaasumar->insertar(); */
+//$empresaasumar->insertar();
 
-/* 
-idempresa;
-enombre;
-edireccion */
-$base= new BaseDatos();
-$base->Ejecutar("INSERT INTO empresa(enombre, edireccion) VALUES ('brazil' , 'tucuman')");
+$prueba= new BaseDatos;
 
+$prueba->Ejecutar("INSERT INTO empresa VALUES ( default , 'DRAGON BALL',  'HYRULE')");
 

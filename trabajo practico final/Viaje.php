@@ -1,5 +1,5 @@
 <?php
-include_once "BasedeDatos.php";
+include_once "BaseDatos.php";
 /* 
 CREATE TABLE viaje (
     idviaje bigint AUTO_INCREMENT,
