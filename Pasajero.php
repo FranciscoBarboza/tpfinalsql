@@ -6,7 +6,7 @@ class Pasajero{
     private $pnombre;
     private $papellido;
     private $ptelefono;
-    private $idviaje;
+    private $idviaje;//esto tiene que ser un ubj viaje
     
     private $mensajeoperacion;
     /**
@@ -18,7 +18,7 @@ class Pasajero{
         $this->pnombre= '';
         $this->papellido= '';
         $this->ptelefono='';
-        $this->idviaje='';
+        $this->idviaje= new Viaje();
     }
 
     public function cargar($rdocumento, $pnombre, $papellido, $ptelefono, $idviaje){
@@ -80,6 +80,7 @@ class Pasajero{
 
     public function buscar($rdocumento){
         $base= new BaseDatos();
+        $viaje1= new Viaje();
         $consultaPersona= "select * from pasajero where rdocumento= {$rdocumento}";
         $resp= false;
         if ($base->Iniciar()) {
@@ -89,7 +90,13 @@ class Pasajero{
                     $this->setPnombre($row2['pnombre']);
                     $this->setPapellido($row2['papellido']);
                     $this->setPtelefono($row2['ptelefono']);
-                    $this->setIdviaje($row2['idviaje']);
+                    
+                    /* busco el viaje con id igual */
+                    $idviajeaux= $row2['idviaje'];
+
+                    $viaje1->buscar($idviajeaux);
+
+                    $this->setIdviaje($idviajeaux);
 
                     $resp= true;
             }
@@ -105,6 +112,9 @@ class Pasajero{
 
     public static function listar($condicion=""){
         $arregloPersona= null;
+
+        $viajeaux= new Viaje();
+
         $base= new BaseDatos();
         $consultaPersonas= 'select * from pasajero';
         if ($condicion!="") {
@@ -121,10 +131,19 @@ class Pasajero{
                     $pnombre= $row2['pnombre'];
                     $papellido= $row2['papellido'];
                     $ptelefono= $row2['ptelefono'];
-                    $idviaje= $row2['idviaje'];
+                    $idviajeaux= $row2['idviaje'];
+
+
+                    
+
+                    if ($viajeaux->buscar($idviajeaux)) {
+                        //lo hizo correctamente
+                    } else {
+                        $viajeaux= null;
+                    }
 
                     $perso= new pasajero();
-                    $perso->cargar($rdocumento, $pnombre, $papellido, $ptelefono, $idviaje);
+                    $perso->cargar($rdocumento, $pnombre, $papellido, $ptelefono, $viajeaux);
 
                     array_push($arregloPersona, $perso);
                 }
@@ -145,7 +164,7 @@ class Pasajero{
         $base= new BaseDatos();
         $resp= false;
         $consultaInsertar="INSERT INTO pasajero(rdocumento, pnombre, papellido, ptelefono, idviaje)
-        VALUES( {$this->getRdocumento()} ,  '{$this->getPnombre()}' ,  '{$this->getPapellido()}'  ,  {$this->getPtelefono()}  , {$this->getIdviaje()}  )";
+        VALUES( {$this->getRdocumento()} ,  '{$this->getPnombre()}' ,  '{$this->getPapellido()}'  ,  {$this->getPtelefono()}  , {$this->getIdviaje()->getIdviaje()}  )";
 
 
         if ($base->Iniciar()) {
@@ -175,8 +194,10 @@ $idviaje;  */
 
     public function modificar(){
         $resp= false;
+        $objviajeaux= $this->getIdviaje(); 
+        $idviajeaux= $objviajeaux->getIdviaje();
         $base= new BaseDatos();
-        $consultaModifica= "UPDATE pasajero SET pnombre= '{$this->getPnombre()}'  ,papellido= '{$this->getPapellido()}' ,ptelefono= {$this->getPtelefono()} ,idviaje= {$this->getIdviaje()} 
+        $consultaModifica= "UPDATE pasajero SET pnombre= '{$this->getPnombre()}'  ,papellido= '{$this->getPapellido()}' ,ptelefono= {$this->getPtelefono()} ,idviaje= {$idviajeaux} 
         WHERE rdocumento= {$this->getRdocumento()}";
 
         if ($base->Iniciar()) {
@@ -216,7 +237,7 @@ $idviaje;  */
          "\nNombre: " . $this->getPnombre(). 
         "\nApellido: ". $this->getPapellido() .
          "\nTelefono: ". $this->getPtelefono() . 
-         "\nIdviaje: ". $this->getIdviaje() ."\n" ;
+         "\nIdviaje: ". $this->getIdviaje()->getIdviaje() ."\n" ;
     }
 
     

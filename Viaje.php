@@ -33,8 +33,8 @@ class Viaje{
         $this->idviaje= '';
         $this->vdestino='';
         $this->vcantmaxpasajeros='';
-        $this->idempresa='';
-        $this->rnumeroempleado='';
+        $this->idempresa=new Empresa();
+        $this->rnumeroempleado= new Responsable();
         $this->vimporte='';
         $this->tipoasiento='';
         $this->idayvuelta='';
@@ -147,6 +147,8 @@ idayvuelta; // si no
 
     public function buscar($idviaje){
         $base= new BaseDatos();
+        $empresaaux= new Empresa;
+        $responsableaux= new Responsable;
         $consultaviaje= "SELECT * FROM Viaje WHERE idviaje= {$idviaje}";
         $resp= false;
         if ($base->Iniciar()) {
@@ -155,8 +157,29 @@ idayvuelta; // si no
                     $this->setIdviaje($idviaje);
                     $this->setVdestino($row2['vdestino']);
                     $this->setVcantmaxpasajeros($row2['vcantmaxpasajeros']);
-                    $this->setIdempresa($row2['idempresa']);
-                    $this->setRnumeroempleado($row2['rnumeroempleado']);
+                    $idempresaaux= $row2['idempresa'];
+
+                    //busco la empresa para asignarla
+                    
+                    if ($empresaaux->buscar($idempresaaux)) {
+                        //no pasa nada
+                    }
+                    else {
+                        $empresaaux= null;
+                    }
+                    $this->setIdempresa($empresaaux); //seteo la empresa encontrada
+
+                    //busco el responsable para asignarlo
+                    $numeroempleadoaux=$row2['rnumeroempleado'];
+                    if ($responsableaux->Buscar($responsableaux)) {
+                        //no pasa nada
+                    } else {
+                        $responsableaux= null;
+                    }
+                    $this->setRnumeroempleado($responsableaux);//seteo responsable empleado
+
+
+                    //sigo normal
                     $this->setVimporte($row2['vimporte']);
                     $this->setTipoasiento($row2['tipoAsiento']);
                     $this->setIdayvuelta($row2['idayvuelta']);
@@ -183,6 +206,8 @@ idayvuelta; // si no
 */
     public function listar($condicion=""){
         $arregloViaje= null;
+        $empresaaux= new Empresa();
+        $responsableaux= new Responsable();
         $base= new BaseDatos();
         $consultaviaje= "SELECT * FROM Viaje";
         if ($condicion!="") {
@@ -198,14 +223,31 @@ idayvuelta; // si no
                     $idviaje= $row2['idviaje'];
                     $vdestino= $row2['vdestino'];
                     $vcantmaxpasajeros= $row2['vcantmaxpasajeros'];
-                    $idempresa= $row2['idempresa'];
-                    $rnumeroempleado= $row2['idempresa'];
+                    //busco el objeto empresa
+                    $idempresaaux= $row2['idempresa'];
+                    if ($empresaaux->buscar($idempresaaux)) {
+                        //no pasa nada
+                    } else {
+                        $empresaaux= null;
+                    }//en el cargar se setea el idempresaaux
+
+                    //busco el objeto responsable
+                    
+                    $rnumeroempleado= $row2['rnumeroempleado'];
+
+                    if ($responsableaux->Buscar($rnumeroempleado)) {
+                        // no pasa nada
+                    } else {
+                        $responsableaux= null;
+                    }
+
+                    //sigo con lo normal
                     $vimporte= $row2['vimporte'];
                     $tipoasiento= $row2['tipoAsiento'];
                     $idayvuelta= $row2['idayvuelta'];
     
                     $viajenuevo= new Viaje();
-                    $viajenuevo->cargar($idviaje, $vdestino, $vcantmaxpasajeros, $idempresa, $rnumeroempleado, $vimporte, $tipoasiento, $idayvuelta);
+                    $viajenuevo->cargar($idviaje, $vdestino, $vcantmaxpasajeros, $idempresaaux, $responsableaux, $vimporte, $tipoasiento, $idayvuelta);
                     array_push($arregloViaje, $viajenuevo);
                 }
 
@@ -230,9 +272,15 @@ idayvuelta; // si no
 */
     public function insertar(){
         $base=new BaseDatos();
+        //asilamos el idempresa
+        $idempresaaux= $this->getIdempresa();
+        $idempresa= $idempresaaux->getIdempresa();
+        //aislamos el el rnumeroempleado
+        $rnumeroempleadoaux= $this->getRnumeroempleado();
+        $rnumeroempleado= $rnumeroempleadoaux->getRnumeroempleado();
         $resp= false;
         $consultaInsertar= "INSERT INTO Viaje(vdestino, vcantmaxpasajeros, idempresa, rnumeroempleado, vimporte, tipoasiento, idayvuelta) 
-        VALUES ('{$this->getVdestino()}' ,  {$this->getVcantmaxpasajeros()}  , {$this->getIdempresa()} , {$this->getRnumeroempleado()}, {$this->getVimporte()}, '{$this->getTipoasiento()}', '{$this->getIdayvuelta()}' )";
+        VALUES ('{$this->getVdestino()}' ,  {$this->getVcantmaxpasajeros()}  , {$idempresa} , {$rnumeroempleado}, {$this->getVimporte()}, '{$this->getTipoasiento()}', '{$this->getIdayvuelta()}' )";
 
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consultaInsertar)) {
@@ -312,8 +360,8 @@ idayvuelta; // si no
         return "\nId Viaje: ". $this->getIdviaje().
         "\nDestino: ". $this->getVdestino().
         "\nCantidad Max Pasajeros: ". $this->getVcantmaxpasajeros().
-        "\nId Empresa: ". $this->getIdempresa().
-        "\nN° Empleado: ". $this->getRnumeroempleado().
+        "\nId Empresa: ". $this->getIdempresa()->getIdempresa().
+        "\nN° Empleado: ". $this->getRnumeroempleado()->getRnumeroempleado().
         "\nImporte: ". $this->getVimporte().
         "\nTipo Asiento: ". $this->getTipoasiento().
         "\nIda y Vuelta: ". $this->getIdayvuelta(). "\n"; 

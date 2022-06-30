@@ -21,7 +21,7 @@ $empresa2->cargar('', 'flecha bus', 'Gral Sarmiento 580');
 $empresa1->insertar();
 $empresa2->insertar(); 
 
- 
+ /*
 
 //veo si se sumaron
 $arrayEmpresas= $empresa1->listar("idempresa > 1");
@@ -225,7 +225,7 @@ foreach ($arrayPasajeros as $key) {
 
 
 
-
+*/
 
 
 

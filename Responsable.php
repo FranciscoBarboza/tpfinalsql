@@ -122,12 +122,13 @@ class Responsable{
         $consultaPersona= "SELECT * FROM Responsable WHERE rnumeroempleado= {$rnumeroempleado}";
         $resp= false;
         if ($base->Iniciar()) {
-            if ($base->Iniciar()) {
+            if ($base->Ejecutar($consultaPersona)) {
                 if ($row2 = $base->Registro()) {
                     $this->setRnumeroempleado($rnumeroempleado);
                     $this->setRnumerolicencia($row2['rnumerolicencia']);
-                    $this->setRnombre('rnombre');
-                    $this->setRapellido('rapellido');
+                    $this->setRnombre($row2['rnombre']);
+                    $this->setRapellido($row2['rapellido']);
+                    
 
                     $resp= true;
                 }
@@ -218,7 +219,7 @@ public function eliminar(){
     $base= new BaseDatos();
     $resp= false;
     if ($base->Iniciar()) {
-        $consultaborra= "DELETE FROM Responsable WHERE nrodoc= {$this->getRnumeroempleado()}";
+        $consultaborra= "DELETE FROM Responsable WHERE rnumeroempleado= {$this->getRnumeroempleado()}";
         if ($base->Ejecutar($consultaborra)) {
             $resp=true;    
         } else {
