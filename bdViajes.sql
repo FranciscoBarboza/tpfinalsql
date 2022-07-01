@@ -16,12 +16,12 @@ CREATE TABLE responsable (
     rapellido  varchar(150), 
     PRIMARY KEY (rnumeroempleado)
     )ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
-	
+	INSERT INTO viaje(vdestino, vdestino, vcantmaxpasajeros, rdocumento,) 
+    values (
 CREATE TABLE viaje (
     idviaje bigint AUTO_INCREMENT,
 	vdestino varchar(150),
     vcantmaxpasajeros int,
-    rdocumento varchar(15),
 	idempresa bigint,
     rnumeroempleado bigint,
     vimporte float,
@@ -44,6 +44,12 @@ CREATE TABLE pasajero (
 	FOREIGN KEY (idviaje) REFERENCES viaje (idviaje)	
     )ENGINE=InnoDB DEFAULT CHARSET=utf8; 
  
- select * from pasajero;
+ insert into responsable(rnumerolicencia, rnombre, rapellido) 
+ values (123, 'carlos' ,'maurelio');
+ 
+ select * from responsable;
 
-  
+insert into empresa(enombre, edireccion) 
+VALUES ('koko', 'san martin 200');
+
+select * from empresa;

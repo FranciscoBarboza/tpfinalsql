@@ -149,7 +149,7 @@ idayvuelta; // si no
         $base= new BaseDatos();
         $empresaaux= new Empresa;
         $responsableaux= new Responsable;
-        $consultaviaje= "SELECT * FROM Viaje WHERE idviaje= {$idviaje}";
+        $consultaviaje= "SELECT * FROM viaje WHERE idviaje= {$idviaje}";
         $resp= false;
         if ($base->Iniciar()) {
             if($base->Ejecutar($consultaviaje)){
@@ -171,7 +171,7 @@ idayvuelta; // si no
 
                     //busco el responsable para asignarlo
                     $numeroempleadoaux=$row2['rnumeroempleado'];
-                    if ($responsableaux->Buscar($responsableaux)) {
+                    if ($responsableaux->Buscar($numeroempleadoaux)) {
                         //no pasa nada
                     } else {
                         $responsableaux= null;
@@ -306,8 +306,13 @@ idayvuelta; // si no
 */
     public function modificar(){
         $base= new BaseDatos();
+        $idempresa= $this->getIdempresa();
+        $rnumeroempleado= $this->getRnumeroempleado();
+
+
+
         $resp= false;
-        $consultaModifica= "UPDATE Viaje SET vdestino= '{$this->getVdestino()}', vcantmaxpasajeros= {$this->getVcantmaxpasajeros()}, idempresa= {$this->getIdempresa()}, rnumeroempleado= {$this->getRnumeroempleado()}, vimporte= {$this->getVimporte()}, tipoasiento= '{$this->getTipoasiento()}', idayvuelta= '{$this->getIdayvuelta()}' WHERE idviaje= {$this->getIdviaje()}";
+        $consultaModifica= "UPDATE viaje SET vdestino= '{$this->getVdestino()}', vcantmaxpasajeros= {$this->getVcantmaxpasajeros()}, idempresa= {$idempresa->getIdempresa()}, rnumeroempleado= {$rnumeroempleado->getRnumeroempleado()}, vimporte= {$this->getVimporte()}, tipoasiento= '{$this->getTipoasiento()}', idayvuelta= '{$this->getIdayvuelta()}' WHERE idviaje= {$this->getIdviaje()}";
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consultaModifica)) {
                 $resp= true;

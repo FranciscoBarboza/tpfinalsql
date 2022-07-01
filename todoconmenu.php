@@ -52,29 +52,39 @@ switch ($menu) {
                 $numempleado= trim(fgets(STDIN));
                 $numempleado= intval($numempleado);
 
+                
+
                 //empiezo el proceso creativo
                 $responsablePrueba= new Responsable();
 
-                $responsablePrueba->buscar($numempleado);
-                $numeroempleadoaux= $responsablePrueba->getRnumeroempleado();
                 
-                separacion();
-                echo $responsablePrueba;
-                separacion();
-                echo "DATOS NUEVOS A EDITAR\n";
-                echo "numero de licencia: ";
-                $numerodelicencia= intval(trim(fgets(STDIN))) ;
-                echo "nombre: ";
-                $nombre= trim(fgets(STDIN));
-                echo "apellido: ";
-                $apellido= trim(fgets(STDIN));
+                
+                
+                if ($responsablePrueba->buscar($numempleado)) {
+                   $numeroempleadoaux= $responsablePrueba->getRnumeroempleado(); 
 
-                $responsablePrueba->cargar($numeroempleadoaux, $numerodelicencia, $nombre, $apellido);
-                if ($responsablePrueba->modificar()) {
-                    echo "\nDATOS MODIFICADOS!\n";
+                    separacion();
+                    echo $responsablePrueba;
+                    separacion();
+                    echo "DATOS NUEVOS A EDITAR\n";
+                    echo "numero de licencia: ";
+                    $numerodelicencia= intval(trim(fgets(STDIN))) ;
+                    echo "nombre: ";
+                    $nombre= trim(fgets(STDIN));
+                    echo "apellido: ";
+                    $apellido= trim(fgets(STDIN));
+
+                    $responsablePrueba->cargar($numeroempleadoaux, $numerodelicencia, $nombre, $apellido);
+                    if ($responsablePrueba->modificar()) {
+                        echo "\nDATOS MODIFICADOS!\n";
+                    } else {
+                        echo "error: no se pudo modificar datos?\n";
+                    }
                 } else {
-                    echo "error: no se pudo modificar datos?\n";
+                    echo "ERROR responsable no encontrado";
                 }
+
+               
                 break;
             
             case 2:// es es buscar responsable
@@ -369,7 +379,37 @@ switch ($menu) {
                         break;
 
 
-                        case 4:
+                        case 5: //eliminar
+                            $empresaAUX=  new Empresa();
+                            separacion();
+                            echo "Ingrese la empresa que quiere borrar\n";
+                            echo "ingrese idempresa: ";
+                            $idempresaAUX= trim(fgets(STDIN));
+                            if (is_numeric($idempresaAUX)) {
+                                $idempresaAUX= intval($idempresaAUX);
+
+
+                                if ($empresaAUX->buscar($idempresaAUX)) {
+                                    separacion();
+                                    echo $empresaAUX;
+                                    echo "quiere eliminar esta empresa?si/no:";
+                                    $resp= strtoupper(trim(fgets(STDIN)));
+                                    if ($resp == "SI") {
+                                        if ($empresaAUX->eliminar()) {
+                                            echo "se elimino correctamente\n";
+                                        }else {
+                                            echo "ERROR al eliminar\n";
+                                        }
+                                    }
+                                } else {
+                                    echo "ERROR: empresa no encontrada";
+                                }
+                                
+                                
+                                
+                            } else {
+                                echo "ERROR: ingrese un valor valido 'numero'";
+                            }
                             break;
 
         }
@@ -378,13 +418,169 @@ switch ($menu) {
     case 3://ESTO ES PARA viaje
         $submenu= submenu();
         switch ($submenu) {
-            case 1:
-                
+            case 1://modificar
+                $viajeAUX= new viaje;
+                separacion();
+                echo "cual es el viaje que quiere modificar?\n";
+                echo "ingrese el idviaje: ";
+                $idviajeAUX= trim(fgets(STDIN));
+
+                if (is_numeric($idviajeAUX)) {
+                    $idviajeAUX= intval($idviajeAUX);
+                    if ($viajeAUX->buscar($idviajeAUX)) {
+                        $cantmaxima= $viajeAUX->getVcantmaxpasajeros();
+                        $cantmaxima= intval($cantmaxima);
+                        separacion();
+                        echo $viajeAUX;
+                        separacion();
+                        echo "ingrese los datos nuevos a modificar: \n";
+                        echo "destino: ";
+                        $destino= trim(fgets(STDIN));
+                        
+                        do {//validacion para cantidad maxima
+                            echo "cantidad maxima de pasajeros(no puede ser menos a la actual): ";
+                            $cantmaxPasajeros= trim(fgets(STDIN));
+                        } while ($cantmaxPasajeros < $cantmaxima || !is_numeric($cantmaxPasajeros));
+                        echo "idempresa: ";
+                        $idempresa= intval(trim(fgets(STDIN)));
+                        echo "N° empleado: ";
+                        $nnumeroempleado= intval(trim(fgets(STDIN)));
+                        echo "importe: ";
+                        $importe= trim(fgets(STDIN));
+                        echo "Tipo Asiento: primera clase cama/ turista semicama:";
+                        $tipoasiento= trim(fgets(STDIN));
+                        do {//validacion para si o no
+                            echo "Ida y vuelta: si/no: ";
+                            $idayvuelta= strtoupper(trim(fgets(STDIN)));
+                        } while (!($idayvuelta == "SI") && !($idayvuelta == "NO"));
+
+                        if (!is_numeric($destino) && is_numeric($cantmaxPasajeros) && is_numeric($idempresa) && is_numeric($nnumeroempleado) && is_numeric($importe) && !is_numeric($tipoasiento)) {
+                            $responsablePrueba= new Responsable();
+                            $empresaPrueba= new Empresa();
+
+                            $idviajeAUXx= $viajeAUX->getIdviaje();
+
+
+                            if ($responsablePrueba->Buscar($nnumeroempleado) && $empresaPrueba->buscar($idempresa)) {
+                                
+                                $viajeAUX->cargar($idviajeAUX, $destino, $cantmaxPasajeros, $empresaPrueba, $responsablePrueba, $importe, $tipoasiento, $idayvuelta);
+
+                                if ($viajeAUX->modificar()) {
+                                    echo "modificado correctamente";
+                                }else {
+                                    echo "ERROR: no se pudo modificar";
+                                }
+                            } else {
+                                echo "ERROR: no existe responsable o empresa que se quiere referenciar";
+                            }
+                        } else {
+                            echo "ERROR: ingrese bien sus datos";
+                        }
+                        
+                    
+                    } else {
+                        echo "ERROR: viaje no encontrado";
+                    }
+                }else {
+                    echo "ERROR: un numero de idviaje";
+                }
                 break;
             
-            default:
-                # code...
+            case 2://ESTE ES PARA BUSCAR VIAJE
+                $viajeAUX= new Viaje();
+                separacion();
+                echo "Ingrese el id del viaje que quiere buscar: ";
+                $idviajeAUX= trim(fgets(STDIN));
+                if (is_numeric($idviajeAUX)) {
+                    $idviajeAUX= intval($idviajeAUX);
+
+                    if ($viajeAUX->buscar($idviajeAUX)) {
+                        echo $viajeAUX;
+                    }else {
+                        echo "ERROR no se encontro viaje";
+                    }
+
+                } else {
+                    echo "ERROR: ingrese un numero";
+                }
                 break;
+
+                case 3://AGREGAR
+                    $viajeAUX= new Viaje;
+                    $empresaAUX= new Empresa();
+                    $responsablePrueba= new Responsable();
+
+                    separacion();
+                    echo "ingrese los datos que quiere ingresar\n no se puede agregar 2 viajes con el mismo destino\n";
+                    separacion();
+                    
+                    //pido los datos
+                    echo "destino: ";
+                    
+                    
+                    do {
+                        $destino= trim(fgets(STDIN));
+                        $arrayviajes= $viajeAUX->listar("vdestino='{$destino}'");
+                        $count= count($arrayviajes);
+                        if ($count <> 0) {
+                            echo "ERROR: ya existe un viaje con este destino: \ningrese un destino diferente: ";
+                        }
+                    } while ($count <> 0);
+                
+
+                    
+                    do {//validacion para cantidad maxima
+                        echo "cantidad maxima de pasajeros: ";
+                        $cantmaxPasajeros= trim(fgets(STDIN));
+                        if (!is_numeric($cantmaxPasajeros)) {
+                            echo "ERROR: ingrese un numero";
+                        }
+                    } while (!is_numeric($cantmaxPasajeros));
+
+
+                    echo "idempresa: ";
+                    $idempresa= intval(trim(fgets(STDIN)));
+                    while (!$empresaAUX->buscar($idempresa)) {
+                        echo "ERROR: empresa no encontrada.";
+                        echo "por favor ingrese otra: ";
+                        $idempresa= trim(fgets(STDIN));
+
+                    }
+                    $idempresa= $empresaAUX;
+
+                    echo "N° empleado: ";
+                    $nnumeroempleado= intval(trim(fgets(STDIN)));
+
+                    while (!$responsablePrueba->Buscar($nnumeroempleado)) {
+                        echo "ERROR: este respónsable no existe.";
+                        
+                        echo "ingrese otro numero de empleado: ";
+
+                        $nnumeroempleado= trim(fgets(STDIN));
+                    }
+
+                    echo "importe: ";
+                    $importe= trim(fgets(STDIN));
+
+                    echo "Tipo Asiento: primera clase cama/ turista semicama:";
+                    $tipoasiento= trim(fgets(STDIN));
+                    do {//validacion para si o no
+                        echo "Ida y vuelta: si/no: ";
+                        $idayvuelta= strtoupper(trim(fgets(STDIN)));
+                    } while (!($idayvuelta == "SI") && !($idayvuelta == "NO"));
+
+                    $viajeAUX->cargar("", $destino, $cantmaxPasajeros,$idempresa, $responsablePrueba, $importe, $tipoasiento, $idayvuelta);
+
+                    if ($viajeAUX->insertar()) {
+                        echo "el viaje se cargo exitosamente.";
+                    } else {
+                        echo "ERROR: el viaje no se pudo agregar.";
+                    }
+
+
+
+
+                    break;
         }
         break;
 }
