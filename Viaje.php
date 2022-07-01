@@ -247,7 +247,7 @@ idayvuelta; // si no
                     $idayvuelta= $row2['idayvuelta'];
     
                     $viajenuevo= new Viaje();
-                    $viajenuevo->cargar($idviaje, $vdestino, $vcantmaxpasajeros, $idempresaaux, $responsableaux, $vimporte, $tipoasiento, $idayvuelta);
+                    $viajenuevo->cargar($idviaje, $vdestino, $vcantmaxpasajeros, $empresaaux, $responsableaux, $vimporte, $tipoasiento, $idayvuelta);
                     array_push($arregloViaje, $viajenuevo);
                 }
 

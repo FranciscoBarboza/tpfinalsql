@@ -96,7 +96,7 @@ class Pasajero{
 
                     $viaje1->buscar($idviajeaux);
 
-                    $this->setIdviaje($idviajeaux);
+                    $this->setIdviaje($viaje1);
 
                     $resp= true;
             }

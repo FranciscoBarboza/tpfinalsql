@@ -576,30 +576,274 @@ switch ($menu) {
                     } else {
                         echo "ERROR: el viaje no se pudo agregar.";
                     }
-
-
-
-
                     break;
+
+                    case 4: //listar
+
+                        $viajeAUX= new Viaje();
+
+                        separacion();
+                        echo "quiere alguno condicion a la hora de listar?\n";
+                        echo "ingrese si/no: \n";
+                        $resp= strtoupper(trim(fgets(STDIN)));
+                        if ($resp == "SI") {
+                            echo "Ingrese la condicion de la lista a mostrar: ";
+                            $condicionSQL= trim(fgets(STDIN));
+                            separacion();
+                            //LISTADO DE VIAJES
+                            $arrayviajes= $viajeAUX->listar($condicionSQL);
+                            $cantidadElementos= count($arrayviajes);
+
+                            if ($cantidadElementos <> 0) {
+                                foreach ($arrayviajes as $key) {
+                                    echo $key;
+                                    echo "---------------------------------";
+                                }
+                            } else {
+                                echo "ERROR: no se encontraron viajes con esta condicion";
+                            }
+
+
+                        } elseif ($resp == "NO") {
+                            $arrayviajes= $viajeAUX->listar();
+                            $cantidadElementos= count($arrayviajes);
+                            if ($cantidadElementos <> 0) {
+                                foreach ($arrayviajes as $key) {
+                                    echo $key;
+                                    echo "-----------------------------";
+                                }
+                            }
+                        } else {
+                            echo "ERROR: ingrese si o no";
+                        }
+                        break;
+
+
+                        case 5://eliminar
+                            $viajeAUX= new Viaje;
+                            separacion();
+                            echo "Ingrese el id del viaje que quiere eliminar: ";
+                            $idviajeAUX= trim(fgets(STDIN));
+                            separacion();
+                            if (is_numeric($idviajeAUX)) {
+                                if ($viajeAUX->buscar($idviajeAUX)) {
+                                    echo $viajeAUX;
+                                    separacion();
+                                    echo "quiere eliminar este viaje? si/no: ";
+                                    $resp= strtoupper(trim(fgets(STDIN)));
+                                    if ($resp == "SI") {
+                                        if ($viajeAUX->eliminar()) {
+                                            echo "ELIMINADO CORRECTAMENTE";
+                                        } else {
+                                            echo "ERROR : no se pudo borrrar";
+                                        }
+                                    } elseif ($resp == "NO") {
+                                        echo "entonces no se borro";
+                                    }
+                                } else {
+                                    echo "ERROR: no se encontro el viaje";
+                                }
+                            } else {
+                                echo "ERROR: Ingrese un numero como id";
+                            }
+                            break;
         }
-        break;
-}
+        break;//aca termina viaje
 
-/*
+        case 4: //pasajero
+            $submenu= submenu();
+            switch ($submenu) {
+                case 1://modificar
+                    $pasajeroAUX= new Pasajero();
+                    $viajeAUX= new Viaje();
+                    separacion();
+                    echo "ingrese el documento del pasajero a eliminar: ";
+                    $documentoAUX= trim(fgets(STDIN));
+                    if (is_numeric($documentoAUX)) {
+                        if ($pasajeroAUX->buscar($documentoAUX)) {
+                            separacion();
+                            echo $pasajeroAUX;
+                            separacion();
+                            echo "ingrese datos nuevos a modificar: ";
+                            echo "\nNombre: ";
+                            $nombre= trim(fgets(STDIN));
+                            echo "Apellido: ";
+                            $apellido= trim(fgets(STDIN));
+                            echo "Telefono: ";
+                            $telefono= trim(fgets(STDIN));
+                            echo "idviaje: ";
+                            $idviajeAUX= trim(fgets(STDIN));
+                            while (!is_numeric($idviajeAUX)) {
+                                echo "error: ingrese un numero: ";
+                                $idviajeAUX= trim(fgets(STDIN));
+                            }
 
 
+                            while (!$viajeAUX->buscar($idviajeAUX)) {
+                                echo "no se encontro el viaje ingrese otro id: ";
+                                $idviajeAUX= trim(fgets(STDIN));    
+                            }
+
+                            if (!is_numeric($nombre) && !is_numeric($apellido) && is_numeric($telefono)) {
+                                $documentoPasajero= $pasajeroAUX->getRdocumento();
+                                $pasajeroAUX->cargar($documentoAUX, $nombre, $apellido, $telefono, $viajeAUX);
+                                if ($pasajeroAUX->modificar()) {
+                                    echo "modificado correctamente";
+                                } else {
+                                    echo "ERROR no se pudo modificar";
+                                }
+                            } else {
+                                echo "ERROR: no ingreso datos correctos";
+                    
+                            }
+                        } else {
+                            echo "ERROR: no se encontro el pasajero";
+                        }
+                    } else {
+                        echo "ERROR: ingrese un numero\n";
+                    }
+                    break;
+                
+                case 2://BUSCAR
+                    separacion();
+                    $pasajeroAUX= new Pasajero;
+                    echo "escriba el documento del pasajero que quiere buscar: ";
+                    $documentoAUX= trim(fgets(STDIN));
+                    while (!is_numeric($documentoAUX)) {
+                        echo "tiene que ser un numero: ";
+                        $documentoAUX= trim(fgets(STDIN));
+
+                    }
+                    if ($pasajeroAUX->buscar($documentoAUX)) {
+                        separacion();
+                        echo $pasajeroAUX;
+                    } else {
+                        echo "pasajero no encontrado";
+                    }
+                    break;
+
+                    case 3://agregar
+                        separacion();//42165680
+                        $pasajeroAUX= new Pasajero;
+                        $viajeAUX= new Viaje;
+                        echo "ingrese los datos de su nuevo pasajero: ";
+                        
+                            echo "\ndocumento: ";
+                            $documento= trim(fgets(STDIN));
+                            
+                            while ($pasajeroAUX->buscar($documento) || !is_numeric($documento)) {
+                                echo "error: no ah ingresado un numero o este pasajero ya existe ingrese un documento distino: ";
+                                $documento= trim(fgets(STDIN));
+                            }
+                            echo "Nombre: ";
+                            $nombre= trim(fgets(STDIN));
+                            echo "Apellido: ";
+                            $apellido= trim(fgets(STDIN));
+                            echo "Telefono: ";
+                            $telefono= trim(fgets(STDIN));
+                            echo "idviaje: ";
+                            $idviajeAUX= trim(fgets(STDIN));
+
+                            while (!is_numeric($idviajeAUX)) {
+                                echo "error: ingrese un numero: ";
+                                $idviajeAUX= trim(fgets(STDIN));
+                            }
 
 
-switch ($resp) {
-    case 1: //menu de responsable
-        
+                            while (!$viajeAUX->buscar($idviajeAUX)) {
+                                echo "no se encontro el viaje ingrese otro id: ";
+                                $idviajeAUX= trim(fgets(STDIN));    
+                            }
+                            //ultima validacion
+                            if (!is_numeric($nombre) && !is_numeric($apellido) && is_numeric($telefono)) {
+                                
+                                $pasajeroAUX->cargar($documento, $nombre, $apellido, $telefono, $viajeAUX);
+                                if ($pasajeroAUX->insertar()) {
+                                    echo "agregado correctamente";
+                                } else {
+                                    echo "ERROR no se pudo agregar";
+                                }
+                            } else {
+                                echo "ERROR: no ingreso datos correctos";
+                            }
+                        break;
 
+                        case 4://listar
+                            $pasajeroAUX= new Pasajero();
+                            separacion();
+                            echo "quiere listar con alguna condicion? si/no: ";
+                            $resp= strtoupper(trim(fgets(STDIN)));
+                            if ($resp == "SI") {
+                                echo "escriba su condicion sql: ";
+                                $condicionSQL= trim(fgets(STDIN));
 
-        break
-    
-    default:
-        # code...
-        break;
-}
+                                $arraypasajeros= $pasajeroAUX->listar($condicionSQL);
+                                $cantElementos= count($arraypasajeros);
+                                separacion();
 
-*/
+                                if ($cantElementos <> 0) {
+                                    foreach ($arraypasajeros as $key) {
+                                        echo $key;
+                                        echo "------------------------------\n";        
+                                    }
+                                } else {
+                                    echo "Error: no se encontro nadie con esa.\n";
+                                }
+                            } elseif ($resp == "NO") {
+                                $arraypasajeros= $pasajeroAUX->listar();
+                                $cantElementos= count($arraypasajeros);
+                                separacion();
+                                if ($cantElementos <> 0) {
+                                    foreach ($arraypasajeros as $key) {  
+                                        echo $key;
+                                    echo "---------------------------\n";
+                                    }
+                                } else {
+                                    echo "no hay pasajeros";
+                                }
+                            } else {
+                                echo "ERROR: escoja si o no";
+                            }
+                            break;
+
+                            case 5://eliminar
+                                separacion();
+                                $pasajeroAUX= new Pasajero;
+                                echo "ingrese el documento del pasajero a eliminar: ";
+                                do {
+                                    $resp= true;
+                                    $documentoAUX= trim(fgets(STDIN));
+                                    if (is_numeric($documentoAUX)) {
+
+                                        if (!$pasajeroAUX->buscar($documentoAUX)) {
+                                               echo "el pasajero no existe por favor ingrese otro documento: ";
+                                        } else {
+                                            separacion();
+                                            echo $pasajeroAUX;
+                                            separacion(); 
+                                            $resp= false;
+                                        }
+                                        
+                                    } else {
+                                        echo "error: ingrese un numero de documento: ";
+                                    }
+                                } while ($resp || !is_numeric($documentoAUX));
+
+                                echo "seguro que quiere eliminar este pasajero? si/no: ";
+                                $resp= strtoupper(trim(fgets(STDIN)));
+                                if ($resp == "SI") {
+                                    if ($pasajeroAUX->eliminar()) {
+                                        echo "se elimino correctamente";
+                                    } else {
+                                        echo "ERROR: no se pudo eliminar";
+                                    }
+                                } elseif ($resp == "NO"){
+                                    echo "no se elimino.";
+                                }
+                                break;
+            }
+            
+            
+            break;
+}// fin del swich
+

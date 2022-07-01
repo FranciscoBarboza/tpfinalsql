@@ -13,12 +13,14 @@ class Empresa{
     private $enombre;
     private $edireccion;
     private $mensajeoperacion;
+    private $arregloviajes;
 
     public function __construct()
     {
         $this->idempresa='';
         $this->enombre='';
         $this->edireccion='';
+        $this->arregloviajes= [];
     }
 
     public function cargar($idempresa, $enombre, $edireccion){
@@ -72,6 +74,7 @@ mensajeoperacion;
 */
     public function buscar($idempresa){
         $base= new BaseDatos();
+        $viajeaux= new Viaje();
         $consultaEmpresa= "SELECT * FROM empresa WHERE idempresa= {$idempresa}";
         $resp= false;
         if ($base->Iniciar()) {
@@ -81,6 +84,10 @@ mensajeoperacion;
                     $this->setEnombre($row2['enombre']);
                     $this->setEdireccion($row2['edireccion']);
                     $resp=true;
+
+                   $arregloviajes= $viajeaux->listar("idempresa= {$idempresa}");
+
+                   $this->setArregloviajes($arregloviajes);
                 }
             } else {
                 $this->setMensajeoperacion($base->getError());
@@ -192,4 +199,12 @@ mensajeoperacion;
         "\nDireccion: ". $this->getEdireccion(). "\n"; 
     }
 
+
+    public function getArregloviajes(){
+        return $this->arregloviajes;
+    }
+
+    public function setArregloviajes($arregloviajes){
+        $this->arregloviajes = $arregloviajes;
+    }
 }
