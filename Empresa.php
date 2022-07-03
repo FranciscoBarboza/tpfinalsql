@@ -77,6 +77,7 @@ mensajeoperacion;
         $viajeaux= new Viaje();
         $consultaEmpresa= "SELECT * FROM empresa WHERE idempresa= {$idempresa}";
         $resp= false;
+        
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consultaEmpresa)) {
                 if ($row2= $base->Registro()) {
@@ -85,9 +86,9 @@ mensajeoperacion;
                     $this->setEdireccion($row2['edireccion']);
                     $resp=true;
 
-                   $arregloviajes= $viajeaux->listar("idempresa= {$idempresa}");
 
-                   $this->setArregloviajes($arregloviajes);
+                    
+                   
                 }
             } else {
                 $this->setMensajeoperacion($base->getError());

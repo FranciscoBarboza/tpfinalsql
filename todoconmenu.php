@@ -208,12 +208,19 @@ switch ($menu) {
                     
                     
                     case 5://ELIMINAR RESPONSABLE
+                        $viajeAUX= new viaje();
                         $responsablePrueba= new Responsable();
                         separacion();
                         echo "que responsable quiere eliminar?\n";
                         echo "ingrese su numero de empleado: ";
                         $numResponsableEliminar= trim(fgets(STDIN));
                         separacion();
+
+                        //nueva validacion
+                        $arrayviaje= $viajeAUX->listar("rnumeroempleado={$numResponsableEliminar}");
+                        $cantElementos= count($arrayviaje);
+
+                        if($cantElementos == 0){// en caso de que no haya viajes asignados continua
 
 
                         if (is_numeric($numResponsableEliminar)) {
@@ -242,7 +249,9 @@ switch ($menu) {
                         } else {
                             echo "ERROR: ingrese bien el numero\n";
                         }
-                        
+                    } else {
+                        echo "ERROR: no se puede borrar este responsable porque tiene viajes asignados";
+                    }
                         
                         break;
         }
@@ -336,7 +345,7 @@ switch ($menu) {
                     if (!is_numeric($nombre) && !is_numeric($direccion)) {
                         separacion();
                         $empresaAUX->cargar("", $nombre, $direccion);
-                        if ($empresaAUX->modificar()) {
+                        if ($empresaAUX->insertar()) {
                             echo "NUEVA EMPRESA AGREGADA CON EXITO!!!\n";
                         } else {
                             echo "ERROR: no se pudo agregar la nueva empresa\n";
@@ -814,6 +823,7 @@ switch ($menu) {
                                     $resp= true;
                                     $documentoAUX= trim(fgets(STDIN));
                                     if (is_numeric($documentoAUX)) {
+                                        
 
                                         if (!$pasajeroAUX->buscar($documentoAUX)) {
                                                echo "el pasajero no existe por favor ingrese otro documento: ";

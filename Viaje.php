@@ -149,6 +149,7 @@ idayvuelta; // si no
         $base= new BaseDatos();
         $empresaaux= new Empresa;
         $responsableaux= new Responsable;
+        $idviaje= intval($idviaje);
         $consultaviaje= "SELECT * FROM viaje WHERE idviaje= {$idviaje}";
         $resp= false;
         if ($base->Iniciar()) {
@@ -158,6 +159,7 @@ idayvuelta; // si no
                     $this->setVdestino($row2['vdestino']);
                     $this->setVcantmaxpasajeros($row2['vcantmaxpasajeros']);
                     $idempresaaux= $row2['idempresa'];
+                    $idempresaaux= intval($idempresaaux);
 
                     //busco la empresa para asignarla
                     
