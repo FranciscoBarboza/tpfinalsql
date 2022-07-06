@@ -549,7 +549,7 @@ switch ($menu) {
 
                     echo "idempresa: ";
                     $idempresa= intval(trim(fgets(STDIN)));
-                    while (!$empresaAUX->buscar($idempresa)) {
+                    while (!($empresaAUX->buscar($idempresa))) {
                         echo "ERROR: empresa no encontrada.";
                         echo "por favor ingrese otra: ";
                         $idempresa= trim(fgets(STDIN));
@@ -630,6 +630,7 @@ switch ($menu) {
 
                         case 5://eliminar
                             $viajeAUX= new Viaje;
+                            $pasajeroAUX= new Pasajero();
                             separacion();
                             echo "Ingrese el id del viaje que quiere eliminar: ";
                             $idviajeAUX= trim(fgets(STDIN));
@@ -637,17 +638,28 @@ switch ($menu) {
                             if (is_numeric($idviajeAUX)) {
                                 if ($viajeAUX->buscar($idviajeAUX)) {
                                     echo $viajeAUX;
+                                    /*buscamos si hay pasajeros para este viaje*/
+                                    $arraypasajeros= $pasajeroAUX->listar("idviaje=". $idviajeAUX);
+                                    $cantidadPasajeros= count($arraypasajeros);
                                     separacion();
                                     echo "quiere eliminar este viaje? si/no: ";
                                     $resp= strtoupper(trim(fgets(STDIN)));
                                     if ($resp == "SI") {
-                                        if ($viajeAUX->eliminar()) {
+                                        if ($cantidadPasajeros == 0) {
+                                            if ($viajeAUX->eliminar()) {
                                             echo "ELIMINADO CORRECTAMENTE";
+                                            } else {
+                                                echo "ERROR : no se pudo borrrar";
+                                            }
                                         } else {
-                                            echo "ERROR : no se pudo borrrar";
+                                            echo "ESTE VIAJE TIENE: ". $cantidadPasajeros. " PASAJEROS ASIGNADOS\n\n";
+                                            echo "ERROR: no se puede borrar.";
                                         }
+                                        
                                     } elseif ($resp == "NO") {
                                         echo "entonces no se borro";
+                                    } else {
+                                        echo "ERROR: INGRESE SI O NO";
                                     }
                                 } else {
                                     echo "ERROR: no se encontro el viaje";
